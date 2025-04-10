@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,6 +23,7 @@ import com.in28minutes.springboot.covmanagement.repository.CovCenterRepository;
 
 @RestController
 @RequestMapping("covcen")
+@CrossOrigin("*")
 public class CovCenterController {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
@@ -78,5 +80,10 @@ public class CovCenterController {
 		});
 		return covcendto;
 	}
+	
+	
+	 
+	
+	
 	
 }

@@ -1,5 +1,7 @@
 package com.in28minutes.springboot.covmanagement.entity;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Entity;
@@ -8,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -20,6 +23,7 @@ import lombok.ToString;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class CovCenDepartment {
 
 	@Id
@@ -33,4 +37,13 @@ public class CovCenDepartment {
 	@ManyToOne
 	@JoinColumn(name = "covcenter_id")
 	private CovCenter covcenter;
+	
+	
+	@OneToMany(mappedBy = "covcen_doc_dept") 
+	private List<CovCenDoctor> covcen_dept_doc;
+
+	
+	public void addCovCenDoctor(CovCenDoctor covcendoc) {
+		covcen_dept_doc.add(covcendoc);
+	}
 }
