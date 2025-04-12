@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,10 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.in28minutes.springboot.covmanagement.dto.CovCenDoctorDto;
 import com.in28minutes.springboot.covmanagement.entity.CovCenDoctor;
+import com.in28minutes.springboot.covmanagement.exceptions.ResourceNotFoundException;
 import com.in28minutes.springboot.covmanagement.repository.CovCenDoctorRepository;
 
 @RestController
 @RequestMapping("covcendoc")
+@CrossOrigin("*")
 public class CovCenDoctorController {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
@@ -53,8 +56,8 @@ public class CovCenDoctorController {
 	}
 	
 	@GetMapping("/{id}")
-	public CovCenDoctor getCovCenDoctorById(@PathVariable Integer id){
-		return covcendocrepo.findById(id).get();
+	public CovCenDoctor getCovCenDoctorById(@PathVariable Integer id) throws ResourceNotFoundException{
+		return covcendocrepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("No Doctor found for given ID "+id) );
 	}
 	
 }

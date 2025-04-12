@@ -16,7 +16,6 @@ public class CovCenDepartmenDTO {
 	private Integer covcendept_id;
 
 	private String covcendept_name;
-
  
 	private Integer covcen_id;
 	

@@ -5,9 +5,11 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,11 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.in28minutes.springboot.covmanagement.dto.CovCenWardTypeDTO;
 import com.in28minutes.springboot.covmanagement.entity.CovCenWard;
 import com.in28minutes.springboot.covmanagement.entity.CovCenWardType;
+import com.in28minutes.springboot.covmanagement.exceptions.ResourceNotFoundException;
 import com.in28minutes.springboot.covmanagement.repository.CovCenWardRepository;
 import com.in28minutes.springboot.covmanagement.repository.CovCenWardtypeRepository;
 
 @RestController
 @RequestMapping("covcenwardtype")
+@CrossOrigin("*")
 public class CovCenWardTypeController {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
@@ -61,8 +65,14 @@ public class CovCenWardTypeController {
 	}
 	
 	@GetMapping("/{id}")
-	public  CovCenWardType getAllCovCenWardTypes(@PathVariable Integer id) {
+	public CovCenWardType getCovCenWardTypeById(@PathVariable Integer id) throws ResourceNotFoundException {
 		
-		return covcenwardtyperepo.findById(id).get();
+		return covcenwardtyperepo.findById(id).orElseThrow(()->new ResourceNotFoundException("No cov center ward Type found"));
+	}
+	
+	@PutMapping("/")
+	public CovCenWardType updateCovCenWardType(@RequestBody CovCenWardType wardtype) {
+		
+		return covcenwardtyperepo.save(wardtype);
 	}
 }

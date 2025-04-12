@@ -1,8 +1,6 @@
 package com.in28minutes.springboot.covmanagement.controller;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -11,6 +9,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.in28minutes.springboot.covmanagement.dto.CovCenterDTO;
 import com.in28minutes.springboot.covmanagement.entity.CovCenDepartment;
 import com.in28minutes.springboot.covmanagement.entity.CovCenter;
+import com.in28minutes.springboot.covmanagement.exceptions.ResourceNotFoundException;
 import com.in28minutes.springboot.covmanagement.repository.CovCenDeptRepository;
 import com.in28minutes.springboot.covmanagement.repository.CovCenterRepository;
 
@@ -66,10 +66,10 @@ public class CovCenterController {
 	}
 	
 	@GetMapping("/{id}")
-	public CovCenterDTO getCovCenterById(@PathVariable Integer id) {
+	public CovCenterDTO getCovCenterById(@PathVariable Integer id) throws ResourceNotFoundException {
 	
 		CovCenterDTO covcendto = new CovCenterDTO();
-		CovCenter covcen = covcenrepo.findById(id).get();
+		CovCenter covcen = covcenrepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("No center found for Given ID "+id));
 		covcendto.setCovcenter_id(covcen.getCovcenter_id());
 		covcendto.setCovcenter_name(covcen.getCovcenter_name());
 		
@@ -82,7 +82,11 @@ public class CovCenterController {
 	}
 	
 	
-	 
+	@PutMapping("/")
+	public CovCenter updateCovCenter(@RequestBody CovCenter center) {
+		return covcenrepo.save(center);
+
+	}
 	
 	
 	

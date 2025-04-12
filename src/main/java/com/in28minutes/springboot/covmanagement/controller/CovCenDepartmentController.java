@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,17 +15,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.in28minutes.springboot.covmanagement.dto.CovCenDepartmenDTO;
 import com.in28minutes.springboot.covmanagement.entity.CovCenDepartment;
+import com.in28minutes.springboot.covmanagement.exceptions.ResourceNotFoundException;
 import com.in28minutes.springboot.covmanagement.repository.CovCenDeptRepository;
 import com.in28minutes.springboot.covmanagement.repository.CovCenDoctorRepository;
 
 @RestController
 @RequestMapping("covcendept")
+@CrossOrigin("*")
 public class CovCenDepartmentController {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
-	private final CovCenDeptRepository covcendeptrepo;
-	
+	private final CovCenDeptRepository covcendeptrepo;	
 	private final CovCenDoctorRepository covcendocrepo;
 
 	public CovCenDepartmentController(CovCenDeptRepository covcendeptrepo,CovCenDoctorRepository covcendocrepo) {
@@ -36,10 +38,8 @@ public class CovCenDepartmentController {
 	@PostMapping("/")
 	public CovCenDepartment saveCovCenDepartment(@RequestBody CovCenDepartment covCenDept) {
 	
-		logger.info("");
-		
-		return null;
-		//return covcendeptrepo.save(covCenDept);
+		logger.info("Inside save department {} ",covCenDept);
+		return covcendeptrepo.save(covCenDept);
 	}
 	
 	@GetMapping("/")
@@ -65,8 +65,8 @@ public class CovCenDepartmentController {
 	}
 	
 	@GetMapping("/{id}")
-	public CovCenDepartment getCovCenDepartmentById(@PathVariable int id) {
-		return covcendeptrepo.findById(id).get();
+	public CovCenDepartment getCovCenDepartmentById(@PathVariable Integer id) throws ResourceNotFoundException {
+		return covcendeptrepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("No department found for given ID "+id));
 	}
 	
 	@GetMapping("/{id}/departments")
@@ -74,6 +74,5 @@ public class CovCenDepartmentController {
 		List<CovCenDepartment> list = covcendeptrepo.findByCovcenterId(id);
 		logger.info("dept list by center {} ",list);
 		return list;
-	}
-	
+	}	
 }
